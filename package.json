@@ -4,10 +4,15 @@
   "private": true,
   "homepage": "https://bam4d.github.io",
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "gh-pages": "^1.0.0",
+    "markdown-it": "^8.3.2",
+    "markdown-it-mathjax": "^2.0.0",
     "react": "^15.6.1",
+    "react-bootstrap": "^0.31.2",
     "react-dom": "^15.6.1",
-    "react-scripts": "1.0.11"
+    "react-scripts": "1.0.11",
+    "serve": "^6.0.6"
   },
   "scripts": {
     "predeploy": "npm run build",
