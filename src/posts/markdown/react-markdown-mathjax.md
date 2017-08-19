@@ -2,7 +2,7 @@
 
 This is my first blog post and also a very meta one, its a blog about making a blog.
 
-All the source code for this blog is contained in the `develop` (*master is reserved to host from {{username}}.github.io*) branch in the [blog repo](https://github.com/Bam4d/bam4d.github.io/tree/develop). Feel free to clone the code from github, run it locally, use it for your own blog etc...
+All the source code for this blog is contained in the `develop` (*master is reserved to host from {{username}}.github.io*) branch in the [blog repo](https://github.com/Bam4d/bam4d.github.io/tree/develop). I can't guarantee that it will be exactly the same as I add new code and experiment. however, feel free to clone the code from github, play around with it, run it locally, use it for your own blog etc...
 
 ## My Approach to blogging
 
@@ -169,7 +169,7 @@ return <div dangerouslySetInnerHTML={{__html:markdown}} />;
 
 ## Modifying the Markdown Component to allow inline MathJax formulas
 
-First things first, mathjax is not very react friendly. So there's going to be some nasty looking hackiness that is going to be a bit cringey. I tried to use the mathjax npm module but i could not for the life of me work out how to actually get it to work as part of a react app. Depending on its configuration, Mathjax will try to download other dependencies from the same host location. Which when bundled built with `create-react-app` are not where MathJax.js thinks they should be. It just doesn't appear to work. I could not get it to work, and neither could [this guy](https://groups.google.com/forum/#!topic/mathjax-users/FN4Z1VV0ffg)
+First things first, mathjax is not very react friendly. So there's going to be some nasty looking hackiness that is going to be a bit cringey. I tried to use the mathjax npm module but i could not for the life of me work out how to actually get it to work as part of a react app. Depending on its configuration, Mathjax will try to download other dependencies from the same host location, which, when bundled built with `create-react-app`, are not where MathJax.js thinks they should be. It just doesn't appear to work. I could not get it to work, and neither could [this guy](https://groups.google.com/forum/#!topic/mathjax-users/FN4Z1VV0ffg)
 
 It doesn't seem that many people have tried to achieve a markdown-mathjax-react app. Or at least there is not a lot of information out there to do it. (until now!)
 
@@ -218,12 +218,7 @@ class App extends Component {
           <h2>Chris Bamford's Tech Blog</h2>
         </div>
         <div className="container">
-          <ul class="nav nav-tabs">
-            <li role="presentation" class="active"><a href="#">Home</a></li>
-            <li role="presentation"><a href="#">Profile</a></li>
-            <li role="presentation"><a href="#">Messages</a></li>
-          </ul>
-          <div className="">
+          <div>
             <MarkdownComponent markdownSrc={demoivre}></MarkdownComponent>
           </div>
           </div>
@@ -253,7 +248,108 @@ Firstly you can see there are two global variables:
         showMathMenuMSIE: false
     };
     ```
- 
+
+Then in the constructor for the App React component (the main component of the entire react application) we are doing the following few lines of code:
+
+```javascript
+loadScript(MATHJAX_SCRIPT, () => {
+    window.MathJax.Hub.Config(MATHJAX_OPTIONS);
+});
+```
+
+This will load the MathJax script into a `<script>` tag in the `<head>` of the html document. 
+MathJax will create an instance of itself on the `window` object of the document, and this is where we can reference it from.
+
+`load-script`'s second argument is a callback for when the script has loaded in the page. When that script is loaded, here we are setting the MathJax config from the `MATHJAX_OPTIONS` constant.
+
+MathJax is now loaded into the react app and configured. The next step is to add it to the `MarkdownComponent`.
+
+### MarkdownComponent.js - with MathJax support
+
+```javascript
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import md from 'markdown-it'
+import mj from 'markdown-it-mathjax'
+
+class MarkdownComponent extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.md = md().use(mj());
+        this.state = {markdownData: ""}
+    }
+
+    setMarkdown = (markdown) => {
+        this.setState({markdownData: markdown})
+    }
+
+    renderMathJax = () => {
+        const currentNode = ReactDOM.findDOMNode(this);
+        window.MathJax.Hub.Queue(["Typeset",window.MathJax.Hub,currentNode]);
+    }
+
+    componentDidMount() {
+        this.renderMathJax();
+    }
+
+    componentDidUpdate(props, state) {
+        this.renderMathJax();
+    }
+
+    componentWillMount() {
+
+        if(this.props.markdownSrc) {
+            fetch(this.props.markdownSrc)
+            .then((response) => {
+                
+                if(!response.ok) {
+                    return "# Not Found";
+                } else {
+                    return response.text();
+                }
+            }).then((markdownData) => {
+                this.setMarkdown(markdownData);
+            });
+        } else if(this.props.markdownText) {
+            this.setMarkdown(this.props.markdownText);
+        }
+    }
+
+    render() {
+        const markdown = this.md.render(this.state.markdownData);
+        return <div dangerouslySetInnerHTML={{__html:markdown}} />;
+    }
+};
+
+export default MarkdownComponent;
+```
+
+You can see that this is mostly the same as the previous `MarkdownComponent` script above, but this has a few additions:
+
+### renderMathJax 
+
+This function like setMarkdown is a helper function to just wrap the MathJax script to re-load and parse any string that have mathjax syntax within a particular node.
+
+Firstly we need get a DOM reference to the markdown component DOM node itself using 
+
+```
+const currentNode = ReactDOM.findDOMNode(this);
+```
+
+and then we pass that to the `MathJax.Hub.Queue` function:
+```
+window.MathJax.Hub.Queue(["Typeset",window.MathJax.Hub,currentNode]);
+```
+
+This forces mathjax to look through the text of that node and replace any mathjax annotations with actual renderered equations.
+    
+
+### componentDidMount() and componentDidUpdate() - [documentation](https://facebook.github.io/react/docs/react-component.html#componentdidmount)
+ These functions are called when the component is rendered into the page, or the content of the component changes. Therefore at this point we need to make sure that we tell mathjax to re-render any new equations that might have appeared. (this doesn't technically happen in this example, but if you were to dynamically change the text... this would make sure that any equations would get re-rendered)
+
+
+
 
 ## Publishing to {{username}}.github.io
 
