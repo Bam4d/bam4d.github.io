@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import md from 'markdown-it'
 import mj from 'markdown-it-mathjax'
 
@@ -15,12 +16,20 @@ class MarkdownComponent extends React.Component {
         this.setState({markdownData: markdown})
     }
 
-    componentDidMount(root) {
-        window.MathJax.Hub.Queue(["Typeset",window.MathJax.Hub,root]);
+    renderMathJax = () => {
+        const currentNode = ReactDOM.findDOMNode(this);
+        console.log("content did mount", currentNode);
+        window.MathJax.Hub.Queue(["Typeset",window.MathJax.Hub,currentNode]);
     }
 
-    componentDidUpdate(props, state, root) {
-        window.MathJax.Hub.Queue(["Typeset",window.Hub,root]);
+    componentDidMount() {
+        this.renderMathJax();
+    }
+
+    componentDidUpdate(props, state) {
+        console.log("props", props);
+        console.log("state", state);
+        this.renderMathJax();
     }
 
     componentWillMount() {
@@ -45,6 +54,7 @@ class MarkdownComponent extends React.Component {
     render() {
         // pseudo code here, depends on the parser
         const markdown = this.md.render(this.state.markdownData);
+        console.log("rendering");
         return <div dangerouslySetInnerHTML={{__html:markdown}} />;
     }
 };

@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import MathJax from 'mathjax'
 import MarkdownComponent from './MarkdownComponent';
 import './App.css';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import testmd from './posts/testmarkdown.md';
-//import 'file?name=[name].[ext]!./devtools_page.html';
+import loadScript from 'load-script'
 
+const MATHJAX_SCRIPT = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
 
-const DEFAULT_OPTIONS = {
+const MATHJAX_OPTIONS = {
     tex2jax: {
-        inlineMath: []
+      inlineMath: [ ['$','$'], ['\\(','\\)'] ],
+      displayMath: [ ['$$','$$'], ['\[','\]'] ]
     },
     showMathMenu: false,
     showMathMenuMSIE: false
@@ -17,8 +18,13 @@ const DEFAULT_OPTIONS = {
 
 class App extends Component {
 
-  componentDidMount() {
-    window.MathJax.Hub.Config(DEFAULT_OPTIONS);
+  constructor(props) {
+    super(props);
+    console.log("doing configuration step");
+    loadScript(MATHJAX_SCRIPT, () => {
+      console.log("loading mathjax options");
+      window.MathJax.Hub.Config(MATHJAX_OPTIONS);
+    });
   }
 
   render() {
@@ -34,8 +40,7 @@ class App extends Component {
             <li role="presentation"><a href="#">Messages</a></li>
           </ul>
           <div className="">
-            <MarkdownComponent markdownSrc={testmd}></MarkdownComponent>
-            <MarkdownComponent markdownText="# Here is some text"></MarkdownComponent>
+            <Post markdownSrc={testmd} title={} category={}></Post>
           </div>
           </div>
       </div>
