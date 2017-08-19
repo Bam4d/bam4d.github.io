@@ -327,7 +327,7 @@ export default MarkdownComponent;
 
 You can see that this is mostly the same as the previous `MarkdownComponent` script above, but this has a few additions:
 
-### renderMathJax 
+#### renderMathJax()
 
 This function like setMarkdown is a helper function to just wrap the MathJax script to re-load and parse any string that have mathjax syntax within a particular node.
 
@@ -345,7 +345,7 @@ window.MathJax.Hub.Queue(["Typeset",window.MathJax.Hub,currentNode]);
 This forces mathjax to look through the text of that node and replace any mathjax annotations with actual renderered equations.
     
 
-### componentDidMount() and componentDidUpdate() - [documentation](https://facebook.github.io/react/docs/react-component.html#componentdidmount)
+#### componentDidMount() and componentDidUpdate() - [documentation](https://facebook.github.io/react/docs/react-component.html#componentdidmount)
  These functions are called when the component is rendered into the page, or the content of the component changes. Therefore at this point we need to make sure that we tell mathjax to re-render any new equations that might have appeared. (this doesn't technically happen in this example, but if you were to dynamically change the text... this would make sure that any equations would get re-rendered)
 
 
@@ -359,14 +359,14 @@ If you want to publish your awesome blog to `{{username}}.github.io` you will ne
 
 1. Switch your branch to something other than master (i use `develop`, only commit on this branch from now on.
 
-    The reason for this is that by default, `{{username}}.github.io` repositories will host your site from the `master` branch. And when using `create-react-app` your published branch is going to look very different than your `develop` branch. This is because `create-react-app` is going to compile all your dependencies together into a super browser friendly, optimized format.
-
     * `git checkout -b "develop"` 
+
+    The reason for this is that by default, `{{username}}.github.io` repositories will host your site from the `master` branch. And when using `create-react-app` your published branch is going to look very different than your `develop` branch. This is because `create-react-app` is going to compile all your dependencies together into a super browser friendly, optimized format.
 
 1. Install `gh-pages` deployment plugin using `npm`
     
-    Run the following command to get the github pages deployment plugin
     * `npm install --save gh-pages`
+    
 
 1. Change the homepage in your `my-app/package.json` file
     * `"homepage": "https://myusername.github.io"`
@@ -393,12 +393,6 @@ If you want to publish your awesome blog to `{{username}}.github.io` you will ne
     
     You should then be able to navigate to `https://{{username}}.github.io` and see your react app! WOO!
 
-**some stuff in bold**
-
- * bullet point one
-    * sub bullet point
- * bullet with some inline MathJax $ 1+{x \over 4} $
-
 
 ## And to prove it all works.... embedded markdown MathJax examples!
 
@@ -406,7 +400,7 @@ If you want to publish your awesome blog to `{{username}}.github.io` you will ne
 
 $$\sum_{i=0}^n i^2 = \frac{(n^2+n)(2n+1)}{6}$$
 
-### Some matrix with a bar in it idk ¯\_(ツ)_/¯
+### A matrix...
 
 $$ \left[
     \begin{array}{cc|c}
@@ -414,3 +408,15 @@ $$ \left[
       4&5&6
     \end{array}
 \right] $$
+
+### A Table...
+
+$$
+\begin{array}{c|lcr}
+n & \text{Left} & \text{Center} & \text{Right} \\
+\hline
+1 & 0.24 & 1 & 125 \\
+2 & -1 & 189 & -8 \\
+3 & -20 & 2000 & 1+10i
+\end{array}
+$$

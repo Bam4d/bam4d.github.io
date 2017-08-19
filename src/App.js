@@ -9,7 +9,7 @@ const MATHJAX_SCRIPT = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/Mat
 const MATHJAX_OPTIONS = {
   tex2jax: {
     inlineMath: [ ['$','$'], ['\\(','\\)'] ],
-    displayMath: [ ['$$','$$'], ['\[','\]'] ],
+    displayMath: [ ['$$','$$'], ['\\[','\\]'] ],
   },
   showMathMenu: false,
   showMathMenuMSIE: false,
@@ -42,7 +42,7 @@ class App extends Component {
       case 'post':
         return (
           <div className="">
-            <Post doNavigate={this.doNavigate.bind(this)} markdownSrc={this.state.options.markdownSrc} />
+            <Post doNavigate={this.doNavigate.bind(this)} markdownSrcPromise={this.state.options.markdownSrcPromise} />
           </div>
         );
       case 'cv':

@@ -6,7 +6,7 @@ class Post extends React.Component {
   
   render() {
     console.log('rendering post', this.props);
-    return <MarkdownComponent markdownSrc={this.props.markdownSrc} />;
+    return <MarkdownComponent markdownSrcPromise={this.props.markdownSrcPromise} />;
   }
 }
 

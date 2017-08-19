@@ -12,17 +12,21 @@ class MarkdownComponent extends React.Component {
   }
 
   componentWillMount() {
-    if(this.props.markdownSrc) {
-      fetch(this.props.markdownSrc)
-        .then((response) => {
-          if(!response.ok) {
-            return '# Not Found';
-          } else {
-            return response.text();
-          }
-        }).then((markdownData) => {
-          this.setMarkdown(markdownData);
-        });
+    console.log('properties', this.props);
+    if(this.props.markdownSrcPromise) {
+      this.props.markdownSrcPromise.then((markdownSrc) => {
+        fetch(markdownSrc)
+            .then((response) => {
+              if(!response.ok) {
+                return '# Not Found';
+              } else {
+                
+                return response.text();
+              }
+            }).then((markdownData) => {
+              this.setMarkdown(markdownData);
+            });
+      });
     } else if(this.props.markdownText) {
       this.setMarkdown(this.props.markdownText);
     }
@@ -37,6 +41,7 @@ class MarkdownComponent extends React.Component {
   }
 
   setMarkdown = (markdown) => {
+    console.log('Setting markdown data', markdown);
     this.setState({markdownData: markdown});
   }
 
@@ -46,6 +51,7 @@ class MarkdownComponent extends React.Component {
   }
 
   render() {
+    console.log('state', this.state);
     const markdown = this.md.render(this.state.markdownData);
     return <div dangerouslySetInnerHTML={{__html:markdown}} />;
   }
