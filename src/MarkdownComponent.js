@@ -12,7 +12,6 @@ class MarkdownComponent extends React.Component {
   }
 
   componentWillMount() {
-    console.log('properties', this.props);
     if(this.props.markdownSrcPromise) {
       this.props.markdownSrcPromise.then((markdownSrc) => {
         fetch(markdownSrc)
@@ -41,17 +40,17 @@ class MarkdownComponent extends React.Component {
   }
 
   setMarkdown = (markdown) => {
-    console.log('Setting markdown data', markdown);
     this.setState({markdownData: markdown});
   }
 
   renderMathJax = () => {
-    const currentNode = ReactDOM.findDOMNode(this);
-    window.MathJax.Hub.Queue(['Typeset',window.MathJax.Hub,currentNode]);
+    if(window.MathJax) {
+      const currentNode = ReactDOM.findDOMNode(this);
+      window.MathJax.Hub.Queue(['Typeset',window.MathJax.Hub,currentNode]);
+    }
   }
 
   render() {
-    console.log('state', this.state);
     const markdown = this.md.render(this.state.markdownData);
     return <div dangerouslySetInnerHTML={{__html:markdown}} />;
   }

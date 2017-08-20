@@ -1,0 +1,18 @@
+.react-share-button-block {
+    margin-right: 30px;
+    text-align: center;
+    float: right!important;
+}
+
+.react-share-count {
+    margin-top: 3px;
+    font-size: 12px;
+}
+
+.react-share-button {
+    cursor: pointer;
+}
+
+.react-share-button:hover:not(:active) {
+    opacity: 0.75;
+}

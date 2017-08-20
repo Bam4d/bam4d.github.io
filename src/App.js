@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Switch, Route, Link } from 'react-router-dom';
 import PostList from './PostList';
+import MarkdownComponent from './MarkdownComponent';
 import Post from './Post';
 import './App.css';
 import loadScript from 'load-script';
@@ -15,6 +17,24 @@ const MATHJAX_OPTIONS = {
   showMathMenuMSIE: false,
 };
 
+const HomePage = () => (
+  <div className="">
+    <MarkdownComponent markdownSrcPromise={import('./posts/markdown/aboutme.md')} />
+  </div>
+);
+
+const PostPage = (postOptions) => (
+  <div className="">
+    <Post id={postOptions.match.params.postId} />
+  </div>
+);
+
+const CVPage = () => (
+  <div className="">
+    soon...
+  </div>
+);
+
 class App extends Component {
 
   constructor(props) {
@@ -26,46 +46,28 @@ class App extends Component {
     this.state = {location: 'home'};
   }
 
-  doNavigate = (nav) => {
-    this.setState(nav);
-  }
-
-  getContent = () => {
-    console.log(this.state);
-    switch(this.state.location) {
-      case 'home':
-        return (
-          <div className="">
-            <PostList doNavigate={this.doNavigate.bind(this)} />
-          </div>
-        );
-      case 'post':
-        return (
-          <div className="">
-            <Post doNavigate={this.doNavigate.bind(this)} markdownSrcPromise={this.state.options.markdownSrcPromise} />
-          </div>
-        );
-      case 'cv':
-        return <div>soon...</div>;
-      default:
-        return <div>404...</div>;
-    }
-  }
-
   render() {
 
     return (
       <div className="App">
         <div className="App-header">
-          <h2>Chris Bamford&#39;s Tech Blog</h2>
+          <h2>Bam4d&#39;s Tech Blog</h2>
         </div>
         <div className="container">
+          
           <ul className="nav nav-tabs">
-            <li role="presentation" className="active"><a href="#" onClick={() => this.doNavigate({location: 'home'})}>Home</a></li>
-            <li role="presentation"><a href="#" onClick={() => this.doNavigate({location: 'cv'})}>CV</a></li>
-            
+            <li role="presentation" className="active"><Link to="/">Home</Link></li>
+            <li role="presentation" className="active"><Link to="/posts">Blog</Link></li>
+            <li role="presentation" className="active"><Link to="/cv">CV</Link></li>
           </ul>
-          {this.getContent()}
+          <div>
+            <Switch>
+              <Route exact path="/" component={HomePage}/>
+              <Route path="/posts" component={PostList}/>
+              <Route path="/cv" component={CVPage}/>
+              <Route path="/post/:postName/:postId" component={PostPage}/>
+            </Switch>
+          </div>
         </div>
       </div>
     );
