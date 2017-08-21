@@ -6,7 +6,7 @@ I've been programming since I was about 11 or 12 years old.
 
 This blog exists as a way of me communicating my ideas and random thoughts about things I find interesting in the world of technology. I think it should also help me to think though my ideas and experiments better. When you can explain a solution to a wide audience it helps you to understand the underlying problem and validate your solutions.
 
-All my blog posts should have a disqus comment board at the bottom of the page, so feel free to add comments or questions, and of course point out any mistakes.
+All my blog posts should have a Disqus comment board at the bottom of the page, so feel free to add comments or questions, and of course point out any mistakes.
 
 ## Here's a couple of things I'm interested in
 ### Machine Learning
@@ -20,7 +20,7 @@ I have experience building RESTful APIs in **python**, **C/C++**, **nodeJS** and
 
 ### Frontend
 
-I'm not much of a frontend developer. My design skills are somewhat limited, but I built this blog engine by myself using react and added a cople of tricks and wrappers here and there to get it to do what I want.
+I'm not much of a frontend developer. My design skills are somewhat limited, but I built this blog engine by myself using react and added a couple of tricks and wrappers here and there to get it to do what I want.
 I've even written a [blog about how I have created my blog](https://bam4d.github.io/#/post/blogging-using-react-markdown-and-mathjax/1)
 
 ### Mathematics
@@ -33,6 +33,6 @@ I'm not entirely sure that I will have anything to blog about thats purely mathe
 
 ## Contact
 
-Twitter: [@Bam4d](https://twitter.com/bam4d?lang=en)
-Github: [Bam4d](https://github.com/Bam4d)
-Email: chrisbam4d@gmail.com
+ * Twitter: [@Bam4d](https://twitter.com/bam4d?lang=en)
+ * Github: [Bam4d](https://github.com/Bam4d)
+ * Email: chrisbam4d@gmail.com
