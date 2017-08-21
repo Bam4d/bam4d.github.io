@@ -56,8 +56,8 @@ So firstly, we will need to install some dependencies using `npm`.
 1. [Markdown-it](https://github.com/markdown-it/markdown-it) - This will render your markdown as html in the browser
     * `npm install --save markdown-it`
 
-2. [Markdown-it-mathjax](https://github.com/markdown-it/markdown-it) - Normalizes different mathjax formats so they do not interfere with markdown syntax
-    * `npm install --save markdown-it`
+2. [Markdown-it-mathjax](https://github.com/classeur/markdown-it-mathjax) - Normalizes different mathjax formats so they do not interfere with markdown syntax
+    * `npm install --save markdown-it-mathjax`
 
 Now we have those dependencies installed we want to create our `MarkdownComponent`
 
@@ -118,7 +118,7 @@ for example the following line:
 this.md = md().use(mj());
 ```
 
-The explanation for this is that the imports `mardown-it` and `markdown-it-mathjax` have been translated to ES6 format:
+The explanation for this is that the imports `markdown-it` and `markdown-it-mathjax` have been translated to ES6 format:
 
 * not using ES6, `require` is returning a function which you have to execute in order to return the reference.
 
