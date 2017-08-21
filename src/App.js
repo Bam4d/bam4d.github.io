@@ -4,6 +4,7 @@ import PostList from './PostList';
 import MarkdownComponent from './MarkdownComponent';
 import Post from './Post';
 import './App.css';
+import Logo from './images/blog logo.png';
 import loadScript from 'load-script';
 
 const MATHJAX_SCRIPT = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
@@ -31,7 +32,7 @@ const PostPage = (postOptions) => (
 
 const CVPage = () => (
   <div className="">
-    soon...
+    <MarkdownComponent markdownSrcPromise={import('./posts/markdown/cv.md')} />
   </div>
 );
 
@@ -51,7 +52,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <h2>Bam4d&#39;s Tech Blog</h2>
+          <img src={Logo} className="logo-image"/>
         </div>
         <div className="container">
           

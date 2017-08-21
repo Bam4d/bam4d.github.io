@@ -3,7 +3,7 @@ import MarkdownComponent from './MarkdownComponent';
 import DisqusThread from 'react-disqus-thread';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { PostConfig } from './PostList';
-import {ShareButtons, ShareCounts, generateShareIcon} from 'react-share';
+import {ShareButtons, generateShareIcon} from 'react-share';
 import './Post.css';
 
 const {
