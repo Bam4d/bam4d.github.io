@@ -1,6 +1,6 @@
 import React from 'react';
 import MarkdownComponent from './MarkdownComponent';
-import DisqusThread from 'react-disqus-thread';
+import Disqus from './disqus';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { PostConfig } from './PostList';
 import {ShareButtons, generateShareIcon} from 'react-share';
@@ -27,6 +27,13 @@ class Post extends React.Component {
     const content = PostConfig[id];
     const title = content.title;
     const disqusId = window.location.hostname.replace(/\./g, '-') + title.replace(/[^\w\s]/gi, '').toLowerCase().split(' ').join('-');
+
+    const disqusConfig = {
+      url: window.location.href,
+      identifier: disqusId,
+      title,
+    };
+    
 
     const shareUrl = window.location.href;
 
@@ -96,12 +103,7 @@ class Post extends React.Component {
         <MarkdownComponent markdownSrcPromise={content.markdownSrcPromise} />
       </div>
       <div className="row">
-        <DisqusThread 
-          shortname="bam4d"
-          identifier={disqusId}
-          title={content.title}
-          category_id={content.category}
-        />
+        <Disqus.DiscussionEmbed shortname="bam4d" config={disqusConfig} />
       </div>
     </div>;
   }

@@ -18,11 +18,12 @@ const MATHJAX_OPTIONS = {
   showMathMenuMSIE: false,
 };
 
-const HomePage = () => (
-  <div className="">
+const HomePage = () => {
+  document.title = 'Bam4d\'s Blog';
+  return <div className="">
     <MarkdownComponent markdownSrcPromise={import('./posts/markdown/aboutme.md')} />
-  </div>
-);
+  </div>;
+};
 
 const PostPage = (postOptions) => (
   <div className="">
@@ -30,11 +31,12 @@ const PostPage = (postOptions) => (
   </div>
 );
 
-const CVPage = () => (
-  <div className="">
+const CVPage = () => {
+  document.title = 'Bam4d\'s CV';
+  return <div className="">
     <MarkdownComponent markdownSrcPromise={import('./posts/markdown/cv.md')} />
-  </div>
-);
+  </div>;
+};
 
 class App extends Component {
 
