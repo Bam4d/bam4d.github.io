@@ -4,13 +4,13 @@
 ![2 dimensional connect 4](./images/connect-4.jpg "6x7 connect 4" =300x)
 
 ## What does this title even mean....?!
-I recently became fairly obsessed with a version of the popular game of "connect-4" where instead of there being a 7x6 grid, there was a 4x4x4 grid.
-
-It's far more difficult to play, requires a fair amount of forward planning and overall is much more fun!!
+I recently became fairly obsessed with a version of the popular game of "connect-4" where instead of there being a 7x6 grid, there was a 4x4x4 grid:
 
 ![3 Dimensional connect 4](./images/3d-connect-4.jpg "6x7 connect 4" =300x)
 
-So this got me thinking about some modifications:
+It's far more difficult to play, requires a fair amount of forward planning and overall is much more fun!!
+
+So this got me thinking about some potential modifications to make the game even better:
 
 ### What if the game is *not* limited to 4 in a row?
 
@@ -32,7 +32,9 @@ All the code for this blog post can be found [here](https://github.com/Bam4d/K-d
 
 ### Generalization for $N$
 
-My first thoughts for finding out of the game was complete, was that I should just try and brute force going though every line in every dimensions and every diagonal in every dimension.... However, this would be fairly computationally expensive even for small boards. This process would have to happen every time a new token has been added to the board.
+Firstly, we need a generic algorithm that can detect when the game is complete.
+
+My first thoughts at solving this was that I should just try and brute force going though every line in every dimensions and every diagonal in every dimension.... However, this would be fairly computationally expensive even for small boards. This process would have to happen every time a new token has been added to the board.
 
 In 2 dimensions: 7x6, you would have to do 6 checks horizontally $O(6\times 7)$ followed by 7 checks vertically $O(7\times 6)$ so you end up with a time complexity that is essentially $O(MN)$ for an MxN grid.
 
