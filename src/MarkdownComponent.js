@@ -4,13 +4,29 @@ import md from 'markdown-it';
 import mj from 'markdown-it-mathjax';
 import imsize from 'markdown-it-imsize';
 
+import '../node_modules/highlightjs/styles/github-gist.css';
+import hljs from 'highlightjs';
+
 class MarkdownComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.md = md()
+    this.md = md({
+      highlight(str, lang) {
+        debugger;
+        if (lang && hljs.getLanguage(lang)) {
+          debugger;
+          try {
+            return hljs.highlight(lang, str).value;
+          } catch (__) {}
+        }
+    
+        return ''; // use external default escaping
+      },
+    })
       .use(mj())
       .use(imsize, { autofill: true });
+
     this.state = {markdownData: ''};
   }
 
