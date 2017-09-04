@@ -2,12 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import md from 'markdown-it';
 import mj from 'markdown-it-mathjax';
+import imsize from 'markdown-it-imsize';
 
 class MarkdownComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.md = md().use(mj());
+    this.md = md()
+      .use(mj())
+      .use(imsize, { autofill: true });
     this.state = {markdownData: ''};
   }
 
