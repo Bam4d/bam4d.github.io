@@ -1,6 +1,5 @@
 # K Dimensional connect N - Part 1: Environment
 
-
 ![2 dimensional connect 4](./images/connect-4.jpg "6x7 connect 4" =300x)
 
 ## What does this title even mean....?!
@@ -335,6 +334,6 @@ def test_sample_from_envs():
 
 ```
 
-## Part 2: Deep Reinforcement learning
+## Part 2: Deep Q learning
 
 This will be covered in my next blog post

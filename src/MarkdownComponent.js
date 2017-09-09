@@ -71,7 +71,7 @@ class MarkdownComponent extends React.Component {
 
   render() {
     const markdown = this.md.render(this.state.markdownData);
-    return <div dangerouslySetInnerHTML={{__html:markdown}} />;
+    return <div className="blog-post col-lg-8" dangerouslySetInnerHTML={{__html:markdown}} />;
   }
 };
 

@@ -38,7 +38,7 @@ class Post extends React.Component {
     const shareUrl = window.location.href;
 
     document.title = content.title;
-    return <div>
+    return <div className="container">
       <div className="row">
         <div className="col-md-6" />
         <div className="col-md-6 pull-right">

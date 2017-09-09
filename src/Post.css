@@ -16,3 +16,9 @@
 .react-share-button:hover:not(:active) {
     opacity: 0.75;
 }
+
+.blog-post img {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+}
