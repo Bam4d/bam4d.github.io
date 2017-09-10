@@ -23,6 +23,7 @@ class MarkdownComponent extends React.Component {
     
         return ''; // use external default escaping
       },
+      html: true,
     })
       .use(mj())
       .use(imsize, { autofill: true });
@@ -71,7 +72,7 @@ class MarkdownComponent extends React.Component {
 
   render() {
     const markdown = this.md.render(this.state.markdownData);
-    return <div className="blog-post col-lg-8" dangerouslySetInnerHTML={{__html:markdown}} />;
+    return <div className="blog-post col-lg" dangerouslySetInnerHTML={{__html:markdown}} />;
   }
 };
 

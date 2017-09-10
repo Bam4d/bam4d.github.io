@@ -15,7 +15,7 @@ class PostListItem extends React.Component {
 
     return (
       <div className="row">
-        <div className="col-lg-8">
+        <div className="col-lg">
           <h1><Link to={'/post/'+path}>{title}</Link></h1>
           <hr/>
           <p><i className="fa fa-calendar" /> Posted on: {this.props.date}</p>

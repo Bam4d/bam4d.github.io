@@ -1,11 +1,11 @@
 # K Dimensional connect N - Part 1: Environment
 
-![2 dimensional connect 4](./images/connect-4.jpg "6x7 connect 4" =300x)
+![2 dimensional connect 4](./images/connect-4/connect-4.jpg "6x7 connect 4" =300x)
 
 ## What does this title even mean....?!
 I recently became fairly obsessed with a version of the popular game of "connect-4" where instead of there being a 7x6 grid, there was a 4x4x4 grid:
 
-![3 Dimensional connect 4](./images/3d-connect-4.jpg "6x7 connect 4" =300x)
+![3 Dimensional connect 4](./images/connect-4/3d-connect-4.jpg "6x7 connect 4" =300x)
 
 It's far more difficult to play, requires a fair amount of forward planning and overall is much more fun!!
 

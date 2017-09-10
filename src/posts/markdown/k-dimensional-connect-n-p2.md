@@ -12,10 +12,11 @@ I'm going to be using Deep-Q learning. There is no particular reason why I chose
 Each model will be trained in an adversarial manner with a stage of pre-training:
 
 1. Play the game against random moves over a set number of iterations.
+  * This will be referred to as the "random player" in the rest of this post.
 1. Reset the epsilon (probability of picking random moves) values of both players
 1. Compete the models against itself over a set number of iterations.
 
-### Reward Scheme
+### Rewards
 
 If the agent wins the reward is +200, every other action in any state has 0 reward.
 
@@ -23,17 +24,225 @@ I did think about trying to set a negative reward for every move, so the agent i
 
 ## Let the games begin
 
-Lets start with some simple configurations:
+Lets start with some simple configurations, you can find the hyper-parameters I have used for the various game board configurations on github.
 
-### 7x6 Grid, 4-in-a-row
+Each game and the models are set up im the following way, the learning rate, layers and iterations were kept constant for all experiments
+```python
+    game_board = [8, 7, 6, 5, 4, 3, 2]  # 7 dimensional
+    to_win = 4 # connect 4
+    episode_state_history_max = 100000
+    episode_state_history_min = 10000
+    update_period = 1000
 
-This is the connect-4 game that everyone knows. You can find the hyper-parameters I have used in the code on github.
+    # The environment
+    env = KDimConnectN(game_board, to_win)
+
+    # The number of inputs the model will have
+    n_inputs = np.prod(game_board)
+
+    # The number of outputs the model will have (both the inputs and the outputs are flattened to be compatible with the feed-forward model)
+    n_outputs = np.prod(game_board[1:])
+
+    # layer configuration
+    layers = [
+        [512, tf.nn.sigmoid],
+        [256, tf.nn.sigmoid],
+        [128, tf.nn.sigmoid],
+        [n_outputs, tf.nn.sigmoid]
+    ]
+
+    # learning rate
+    learning_rate = 1e-3
+
+    # number of iterations
+    iterations = 2000
+
+    # Set up our model and target networks for Deep Q learning
+    model = SimpleFeedForward(n_inputs, n_outputs, layers, learning_rate, use_bias=True, use_l2 = False, name="model")
+    target = SimpleFeedForward(n_inputs, n_outputs, layers, learning_rate, use_bias=True, use_l2 = False, name="target")
+
+    # Our Deep Q network
+    deep_q_network = DeepQ(gamma, model, target, episode_state_history_max=episode_state_history_max, episode_state_history_min=episode_state_history_min, batch_sz=32, update_period=update_period)
+
+```
+
+### 6x7 Grid, 4-in-a-row
+
+This is the connect-4 game that everyone knows. Lets see what happens when training a Deep Q network against a random player
+
+#### Moving average reward over last 100 turns p1 (Deep Q Network) vs p2 (Random)
+
+<div class="plots">
+    <img src="./images/connect-4/6x7-4/deepq_vs_random_reward_p1.png" />
+    <img src="./images/connect-4/6x7-4/deepq_vs_random_reward_p2.png" /> 
+</div>
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Random)
+
+<div class="plots">
+    <img src="./images/connect-4/6x7-4/deepq_vs_random_wins_p1.png" />
+    <img src="./images/connect-4/6x7-4/deepq_vs_random_wins_p2.png" /> 
+</div>
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/6x7-4/deepq_vs_random_steps.png" />
+</div>
+
+So we Can see here that our agent is definitely learning how to play connect 4 against a random player. The average rewards and the average probability of wins graphs are pretty much identical here. So for the rest of the results I won't show both sets. 
+
+Now we can see what happens when we take our pre-trained model and play it against itself
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Deep Q Network)
+
+<div class="plots">
+    <img src="./images/connect-4/6x7-4/deepq_vs_deepq_wins_p1.png" />
+    <img src="./images/connect-4/6x7-4/deepq_vs_deepq_wins_p2.png" /> 
+</div>
+
+Interestingly there does not seem to be much difference in terms of which player wins the most, although the player that starts first has a slight advantage.
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/6x7-4/deepq_vs_deepq_steps.png" />
+</div>
+
+The algorithm clearly has to work a bit harder to win in these situations, although the maximum number of iterations is only 2000, the games appear to be getting longer and longer, suggesting that the algorithm is finding better moves to stop the other player from winning.
+
+### 60x70 grid, 4-in-a-row
+
+In this game board, against a random player, I think that the best strategy would be to build vertical lines and take advantage of the fact that the probability of a random input selection will be $1/70$
+
+Lets see if this is true...
 
 
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Random)
 
+<div class="plots">
+    <img src="./images/connect-4/60x70-4/deepq_vs_random_wins_p1.png" />
+    <img src="./images/connect-4/60x70-4/deepq_vs_random_wins_p2.png" /> 
+</div>  
 
+Clearly this is an easy game board to master against the random player!
 
+#### Moving average of steps per game 
 
+<div class="plots">
+    <img src="./images/connect-4/60x70-4/deepq_vs_random_steps.png" />
+</div>
+
+The number of steps this reduces to here is about 7 steps. This is the absolute minimum number of steps in the game for trying to win 4 in a row. So how will this network perform when playing against itself?
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Deep Q Network)
+
+<div class="plots">
+    <img src="./images/connect-4/60x70-4/deepq_vs_deepq_wins_p1.png" />
+    <img src="./images/connect-4/60x70-4/deepq_vs_deepq_wins_p2.png" /> 
+</div>
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/60x70-4/deepq_vs_deepq_steps.png" />
+</div>
+
+As expected, the number of steps jumps dramatically as the network battles to win the game. After 2000 iterations, player 1 and player 2 are winning roughly the same amount of games. It would be interesting here to run this for a significantly longer amount of time to see if player 1 gains a significant advantage for starting.
+
+### 10x10 grid, 5-in-a-row
+
+Getting a little bit more interesting now... still in 2 dimensions, but lets see if we can learn 5 in a row..
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Random)
+
+<div class="plots">
+    <img src="./images/connect-4/10x10-5/deepq_vs_random_wins_p1.png" />
+    <img src="./images/connect-4/10x10-5/deepq_vs_random_wins_p2.png" /> 
+</div>  
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/10x10-5/deepq_vs_random_steps.png" />
+</div>
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Deep Q Network)
+
+<div class="plots">
+    <img src="./images/connect-4/10x10-5/deepq_vs_deepq_wins_p1.png" />
+    <img src="./images/connect-4/10x10-5/deepq_vs_deepq_wins_p2.png" /> 
+</div>
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/10x10-5/deepq_vs_deepq_steps.png" />
+</div>
+
+As expected, the network can learn easily against the random player, and there seems to be a small advantage for player 1 when learning against itself.
+
+Lets add some more complexity!!
+
+### 4x4x4 grid, 4-in-a-row
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Random)
+
+<div class="plots">
+    <img src="./images/connect-4/4x4x4-4/deepq_vs_random_wins_p1.png" />
+    <img src="./images/connect-4/4x4x4-4/deepq_vs_random_wins_p2.png" /> 
+</div>  
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/4x4x4-4/deepq_vs_random_steps.png" />
+</div>
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Deep Q Network)
+
+<div class="plots">
+    <img src="./images/connect-4/4x4x4-4/deepq_vs_deepq_wins_p1.png" />
+    <img src="./images/connect-4/4x4x4-4/deepq_vs_deepq_wins_p2.png" /> 
+</div>
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/4x4x4-4/deepq_vs_deepq_steps.png" />
+</div>
+
+The model learns slightly slower but the results are still moving in the expected direction. Again, we are only running on a maxiumum of 2K games, so there is still some fluctuation in the results.
+
+### 3x3x3x3x3 grid, 3-in-a-row
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Random)
+
+<div class="plots">
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_random_wins_p1.png" />
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_random_wins_p2.png" /> 
+</div>  
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_random_steps.png" />
+</div>
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Deep Q Network)
+
+<div class="plots">
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_deepq_wins_p1.png" />
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_deepq_wins_p2.png" /> 
+</div>
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_deepq_steps.png" />
+</div>
+
+The model learns slightly slower but the results are still moving in the expected direction. Again, we are only running on a maxiumum of 2K games, so there is still some fluctuation in the results.
 
 
 ## Conclusion
@@ -45,3 +254,27 @@ Also perhaps having the same model play both player1 and player2 might actually 
 It's hard to verify whether playing the same model against itself is infact learning any strategies, or just randomly playing. However It does seem that there appears to be an advantage for the first player in every configuration.
 
 If anyone has any any way of knowing if the model is actually improving rather than just becoming increasingly more random, please leave me a comment, or try it out yourself and let me know.
+
+
+### Training and rewards
+
+If the network chooses an invalid state, we cannot simply dismiss this attempt and then move on to the next player, the ML player HAS to make a valid move. In order to achieve this the action had to be sampled multiple times from the model until a valid state was chosen. (the environment returns a boolean to indicate whether the action is valid in the current state)
+
+```python
+    while not valid_move:
+        next_action = model.sample_action(state, epsilon)
+        next_action_coords = get_action_coords(next_action, game_board)
+        next_state, reward, done, valid_move = env.step(np.atleast_1d(next_action_coords), player)
+
+```
+
+This posed a problem because the model will not change it's decision unless the state changes, or the model is updated. 
+Teaching the network to not play invalid moves was quite difficult. I initially tried to set a negative reward each time the player tried to play an invalid move, however this seemed to have a very negative effect on the entire training regime, and still did not seem to stop the network from attempting invalid states. 
+
+The solution for this was to make sure that the epsilon value was never 0. This would allow a random choice to be made very rarely, which would bring the game out of the loop where the model has chosen an invalid action.
+
+
+### Dimensionality
+
+As more dimensions were added, the training time increased as would be expected. additionally the more tokens required to win, the game time to win increased. I tried to run 60x70 game board with 40 tokens in a row, but after 4 hours, not a single game had been won by the network or the random player. I think a different approach such as the monte-carlo approach taken to defeat the game of go would be a good candidate solution to this.
+ 
