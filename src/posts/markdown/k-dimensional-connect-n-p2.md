@@ -1,8 +1,8 @@
 # K Dimensional connect N - Part 2: Deep Q Learning
 
-In my previous blog post I showed how to extend the game connect 4 into any dimensions and and any number of N-in-a-row.
+In my [previous blog post](https://bam4d.github.io/#/post/k-dimensional-connect-n--part-1-environment/2) I showed how to extend the game connect 4 into any dimensions and and any number of N-in-a-row. Reading the previous post first will help in understanding the background to the problem and some of the concepts I talk about in this post. 
 
-Now i'm going to show how machine learning algorithms can quite easily learn and play N-dimensional versions of this game.
+In this post I'm going to show how machine learning algorithms can quite easily learn and play N-dimensional versions of this game.
 
 All of the code for these experiments can be found [here](https://github.com/Bam4d/K-dimensional-connect-N/blob/master)
 Please feel free to download and try to reproduce my experiments. And of course, let me know if there are any errors!
@@ -11,8 +11,7 @@ I'm going to be using Deep-Q learning. There is no particular reason why I chose
 
 Each model will be trained in an adversarial manner with a stage of pre-training:
 
-1. Play the game against random moves over a set number of iterations.
-  * This will be referred to as the "random player" in the rest of this post.
+1. Play the game against random moves over a set number of iterations. (This will be referred to as the "random player" in the rest of this post.)
 1. Reset the epsilon (probability of picking random moves) values of both players
 1. Compete the models against itself over a set number of iterations.
 
@@ -113,11 +112,6 @@ The algorithm clearly has to work a bit harder to win in these situations, altho
 
 ### 60x70 grid, 4-in-a-row
 
-In this game board, against a random player, I think that the best strategy would be to build vertical lines and take advantage of the fact that the probability of a random input selection will be $1/70$
-
-Lets see if this is true...
-
-
 #### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Random)
 
 <div class="plots">
@@ -127,13 +121,15 @@ Lets see if this is true...
 
 Clearly this is an easy game board to master against the random player!
 
+In this game board, against a random player, I think that the best strategy would be to build vertical lines and take advantage of the fact that the probability of a random input selection will be $1/70$. It would be interesting to analyse this and see if that is the strategy developed. 
+
 #### Moving average of steps per game 
 
 <div class="plots">
     <img src="./images/connect-4/60x70-4/deepq_vs_random_steps.png" />
 </div>
 
-The number of steps this reduces to here is about 7 steps. This is the absolute minimum number of steps in the game for trying to win 4 in a row. So how will this network perform when playing against itself?
+The number of steps this reduces to here is about 7 steps. This is the absolute minimum number of steps in the game for trying to win 4 in a row. So how will this model perform when playing against itself?
 
 #### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Deep Q Network)
 
@@ -148,7 +144,7 @@ The number of steps this reduces to here is about 7 steps. This is the absolute 
     <img src="./images/connect-4/60x70-4/deepq_vs_deepq_steps.png" />
 </div>
 
-As expected, the number of steps jumps dramatically as the network battles to win the game. After 2000 iterations, player 1 and player 2 are winning roughly the same amount of games. It would be interesting here to run this for a significantly longer amount of time to see if player 1 gains a significant advantage for starting.
+As expected, the number of steps jumps dramatically as the model battles to win the game. After 2000 iterations, player 1 and player 2 are winning roughly the same amount of games. It would be interesting here to run this for a significantly longer amount of time to see if player 1 gains a significant advantage for starting.
 
 ### 10x10 grid, 5-in-a-row
 
@@ -180,7 +176,7 @@ Getting a little bit more interesting now... still in 2 dimensions, but lets see
     <img src="./images/connect-4/10x10-5/deepq_vs_deepq_steps.png" />
 </div>
 
-As expected, the network can learn easily against the random player, and there seems to be a small advantage for player 1 when learning against itself.
+As expected, the model can learn easily against the random player, and there seems to be a small advantage for player 1 when learning against itself.
 
 Lets add some more complexity!!
 
@@ -242,10 +238,45 @@ The model learns slightly slower but the results are still moving in the expecte
     <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_deepq_steps.png" />
 </div>
 
-The model learns slightly slower but the results are still moving in the expected direction. Again, we are only running on a maxiumum of 2K games, so there is still some fluctuation in the results.
+5 dimensions and 3 in a row seems like an easy goal for the model! 
 
+### 8x7x6x5x4x3x2 grid, 4-in-a-row
+
+Now this one I find a bit hard to conceptualize. I've tried to make it very hard for the deep Q algorithm to solve by adding in some dimensions that it cannot possibly win (because they have less than 4 spaces to put tokens).
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Random)
+
+<div class="plots">
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_random_wins_p1.png" />
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_random_wins_p2.png" /> 
+</div>  
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_random_steps.png" />
+</div>
+
+#### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Deep Q Network)
+
+<div class="plots">
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_deepq_wins_p1.png" />
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_deepq_wins_p2.png" /> 
+</div>
+
+This took at least 48 hours to train, but as usual it looks like p1 has a slight advantage over p2
+
+#### Moving average of steps per game 
+
+<div class="plots">
+    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_deepq_steps.png" />
+</div>
+
+The average number of steps after the model plays 2K games against itself is around 680! This is an extremely long game! The longest possible game that can be played here with no winners is $8! = 40320$ so actually $680$ is quite a short game in comparison to the total number of steps possible. Without studying the possible combinations of wins and strategies in this game board, it would be hard to understand if $680$ is optimal. My guess is that a rule-based system could  beat this AI.
 
 ## Conclusion
+
+I think that training time and complexity is much more related to the value of $N$ rather than the value of $|K|$ or $K_i$. If $K$ 
 
 I couldn't quite get the hyper-parameters right to play the [perfect game of traditional 7x6 connect-4](http://tromp.github.io/c4.html)... perhaps much longer training or a different update frequency would help. 
 
@@ -258,23 +289,49 @@ If anyone has any any way of knowing if the model is actually improving rather t
 
 ### Training and rewards
 
-If the network chooses an invalid state, we cannot simply dismiss this attempt and then move on to the next player, the ML player HAS to make a valid move. In order to achieve this the action had to be sampled multiple times from the model until a valid state was chosen. (the environment returns a boolean to indicate whether the action is valid in the current state)
+If the model chooses an invalid state, we cannot simply dismiss this attempt and then move on to the next player, the ML player HAS to make a valid move. In order to achieve this the action had to be sampled multiple times from the model until a valid state was chosen. (the environment returns a boolean to indicate whether the action is valid in the current state)
 
 ```python
-    while not valid_move:
-        next_action = model.sample_action(state, epsilon)
-        next_action_coords = get_action_coords(next_action, game_board)
-        next_state, reward, done, valid_move = env.step(np.atleast_1d(next_action_coords), player)
+while not valid_move:
+    next_action = model.sample_action(state, epsilon)
+    next_action_coords = get_action_coords(next_action, game_board)
+    next_state, reward, done, valid_move = env.step(np.atleast_1d(next_action_coords), player)
 
 ```
 
 This posed a problem because the model will not change it's decision unless the state changes, or the model is updated. 
-Teaching the network to not play invalid moves was quite difficult. I initially tried to set a negative reward each time the player tried to play an invalid move, however this seemed to have a very negative effect on the entire training regime, and still did not seem to stop the network from attempting invalid states. 
+Teaching the model to not play invalid moves was quite difficult. I initially tried to set a negative reward each time the player tried to play an invalid move, however this seemed to have a very negative effect on the entire training regime, and still did not seem to stop the model from attempting invalid states. 
 
 The solution for this was to make sure that the epsilon value was never 0. This would allow a random choice to be made very rarely, which would bring the game out of the loop where the model has chosen an invalid action.
 
+#### Tracking loss/cost function
+
+I've been using mean squared error as the loss function and have been trying to calculate the moving of average of this over the course of training.
+
+```python 
+error = self.G - tf.reduce_sum(tf.one_hot(self.A, n_outputs) * pred, axis=1)
+
+self.cost = tf.reduce_sum(tf.square(error))
+```
+
+Returning it from training op:
+
+```python
+self.session.run(
+    (self.cost, self.train_op),
+    feed_dict = {
+        self.X: np.atleast_2d(state),
+        self.A: np.atleast_1d(actions),
+        self.G: np.atleast_1d(G)
+    }
+)
+```
+
+I would expect that the MSE would reduce over time, however it seems to increase as the results of the model get better. I'm not entirely sure what is going wrong here. Potentially I have misunderstood something about the Deep Q algorithm. If anyone can look at my code and leave a comment on this post, that would be very helpful.
+
+I don't think I am calculating this incorrectly, because otherwise the model would not be training.
 
 ### Dimensionality
 
-As more dimensions were added, the training time increased as would be expected. additionally the more tokens required to win, the game time to win increased. I tried to run 60x70 game board with 40 tokens in a row, but after 4 hours, not a single game had been won by the network or the random player. I think a different approach such as the monte-carlo approach taken to defeat the game of go would be a good candidate solution to this.
+As more dimensions were added, the training time increased as would be expected. additionally the more tokens required to win, the game time to win increased. I tried to run 60x70 game board with 40 tokens in a row, but after 4 hours, not a single game had been won by the model or the random player. I think a different approach such as the monte-carlo approach taken to defeat the game of go would be a good candidate solution to this.
  

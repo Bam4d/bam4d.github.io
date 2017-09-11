@@ -19,9 +19,11 @@
 
 .blog-post img {
     margin: auto;
+    display: flex;
     justify-content: center;
 }
 
 .plots img {
     width: 40%;
+    display: inline;
 }
