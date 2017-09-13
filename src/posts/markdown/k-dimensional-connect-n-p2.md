@@ -257,6 +257,8 @@ Now this one I find a bit hard to conceptualize. I've tried to make it very hard
     <img src="./images/connect-4/8x7x6x5x4x3x2-4/deepq_vs_random_steps.png" />
 </div>
 
+WOW! even in such a huge dimensional space the model can easily find a strategy to defeat the random player. It would definitely be interesting to analyse this to find out what the strategy is....
+
 #### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Deep Q Network)
 
 <div class="plots">
@@ -264,7 +266,7 @@ Now this one I find a bit hard to conceptualize. I've tried to make it very hard
     <img src="./images/connect-4/8x7x6x5x4x3x2-4/deepq_vs_deepq_wins_p2.png" /> 
 </div>
 
-This took at least 48 hours to train, but as usual it looks like p1 has a slight advantage over p2
+This took at least 72 hours to train, but as usual it looks like p1 has a slight advantage over p2
 
 #### Moving average of steps per game 
 
@@ -276,7 +278,9 @@ The average number of steps after the model plays 2K games against itself is aro
 
 ## Conclusion
 
-I think that training time and complexity is much more related to the value of $N$ rather than the value of $|K|$ or $K_i$. If $K$ 
+I think that training time and complexity is much more related to the value of $N$ rather than the value of $|K|$ or $K_i$. With larger values of $N$ it takes a much longer time to learn a strategy as the probability of finding a winning move in a completely random scenario, decreases exponentially with respect to $N$.
+
+The model can quite easily learn a winning strategy in high dimensional games against a random player. Probably because the probability of being blocked by a random move decreases exponentially with every new dimension added. However when the model is playing against itself, the model seems to learn that it needs to block the other player, and the model appears to learn a (probably non-optimal) strategy to win after a certain number of moves.
 
 I couldn't quite get the hyper-parameters right to play the [perfect game of traditional 7x6 connect-4](http://tromp.github.io/c4.html)... perhaps much longer training or a different update frequency would help. 
 
@@ -331,7 +335,15 @@ I would expect that the MSE would reduce over time, however it seems to increase
 
 I don't think I am calculating this incorrectly, because otherwise the model would not be training.
 
-### Dimensionality
+### Possible further approaches
 
 As more dimensions were added, the training time increased as would be expected. additionally the more tokens required to win, the game time to win increased. I tried to run 60x70 game board with 40 tokens in a row, but after 4 hours, not a single game had been won by the model or the random player. I think a different approach such as the monte-carlo approach taken to defeat the game of go would be a good candidate solution to this.
+
+The game in any set of dimensions with any number of tokens to win has inherent symmetry which was not taken advantage of, i.e using weight sharing across same sized dimensions etc. One way of doing this might be convolutional neural nets. I did not try to train the model using a convolutional input layers due to the dimensionality aspect potentially making that far more complex. `tensorflow` only supports up to 3 dimensional convolutional neural networks, and I did not really want to spend the time trying to work out how to do convolutions in N dimensional space.
+
+If I had more time/patience I would like to have looked deeper into the strategies developed by the models at higher dimensions where the agent was easily winning. I'm hoping that this analysis won't find that there is a bug in the way the tokens are placed, or in the algorithm that calculates if a player has won. There is no bug in the lower dimensions tested, but I am suspicious of the higher ones.
+
+#### Multi-Agent K-dimensional-connect-N
+
+Now this one I think would be particularly fun! How about we introduce more players into the mix? Currently we represent each player as a 1 or -1. maybe we would have to represent the players as 1-hot vectors or some sort of embedding layer for each player?
  
