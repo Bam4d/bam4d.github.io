@@ -247,21 +247,21 @@ Now this one I find a bit hard to conceptualize. I've tried to make it very hard
 #### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Random)
 
 <div class="plots">
-    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_random_wins_p1.png" />
-    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_random_wins_p2.png" /> 
+    <img src="./images/connect-4/8x7x6x5x4x3x2-4/deepq_vs_random_wins_p1.png" />
+    <img src="./images/connect-4/8x7x6x5x4x3x2-4/deepq_vs_random_wins_p2.png" /> 
 </div>  
 
 #### Moving average of steps per game 
 
 <div class="plots">
-    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_random_steps.png" />
+    <img src="./images/connect-4/8x7x6x5x4x3x2-4/deepq_vs_random_steps.png" />
 </div>
 
 #### Moving average $P(wins)$ over last 100 turns p1 (Deep Q Network) vs p2 (Deep Q Network)
 
 <div class="plots">
-    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_deepq_wins_p1.png" />
-    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_deepq_wins_p2.png" /> 
+    <img src="./images/connect-4/8x7x6x5x4x3x2-4/deepq_vs_deepq_wins_p1.png" />
+    <img src="./images/connect-4/8x7x6x5x4x3x2-4/deepq_vs_deepq_wins_p2.png" /> 
 </div>
 
 This took at least 48 hours to train, but as usual it looks like p1 has a slight advantage over p2
@@ -269,10 +269,10 @@ This took at least 48 hours to train, but as usual it looks like p1 has a slight
 #### Moving average of steps per game 
 
 <div class="plots">
-    <img src="./images/connect-4/3x3x3x3x3-3/deepq_vs_deepq_steps.png" />
+    <img src="./images/connect-4/8x7x6x5x4x3x2-4/deepq_vs_deepq_steps.png" />
 </div>
 
-The average number of steps after the model plays 2K games against itself is around 680! This is an extremely long game! The longest possible game that can be played here with no winners is $8! = 40320$ so actually $680$ is quite a short game in comparison to the total number of steps possible. Without studying the possible combinations of wins and strategies in this game board, it would be hard to understand if $680$ is optimal. My guess is that a rule-based system could  beat this AI.
+The average number of steps after the model plays 2K games against itself is around $650$! This is an extremely long game! The longest possible game that can be played here with no winners is $8! = 40320$ so actually $650$ is quite a short game in comparison to the total number of steps possible. Without studying the possible combinations of wins and strategies in this game board, it would be hard to understand if $650$ is optimal. My guess is that a rule-based system could  beat this AI.
 
 ## Conclusion
 
