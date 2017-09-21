@@ -59,9 +59,9 @@ class App extends Component {
         <div className="container">
           
           <ul className="nav nav-tabs">
-            <li role="presentation" className="active"><Link to="/">Home</Link></li>
-            <li role="presentation" className="active"><Link to="/posts">Blog</Link></li>
-            <li role="presentation" className="active"><Link to="/cv">CV</Link></li>
+            <li role="presentation" className="clickable"><Link to="/">Home</Link></li>
+            <li role="presentation" className="clickable"><Link to="/posts">Blog</Link></li>
+            <li role="presentation" className="clickable"><Link to="/cv">CV</Link></li>
           </ul>
           <div>
             <Switch>

@@ -4,6 +4,7 @@ import Disqus from './disqus';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import { PostConfig } from './PostList';
 import {ShareButtons, generateShareIcon} from 'react-share';
+import MetaTags from 'react-meta-tags';
 import './Post.css';
 
 const {
@@ -27,18 +28,43 @@ class Post extends React.Component {
     const content = PostConfig[id];
     const title = content.title;
     const disqusId = window.location.hostname.replace(/\./g, '-') + title.replace(/[^\w\s]/gi, '').toLowerCase().split(' ').join('-');
+    const url = window.location.href;
 
     const disqusConfig = {
-      url: window.location.href,
+      url,
       identifier: disqusId,
       title,
     };
     
+    const seo_image = content.seo_image;
+    const seo_description = content.seo_description;
+    const seo_sitename = 'Bam4d\'s blog';
+    const posted_date = content.date;
+    const seo_keywords = content.category + ',' + content.tags.join(',');
 
     const shareUrl = window.location.href;
 
     document.title = content.title;
     return <div className="container">
+      <MetaTags>
+
+        <meta id="meta-keywords" name="keywords" content={seo_keywords} />
+        <meta id="meta-description" name="description" content={seo_description} />
+        
+        <meta id="og-title" property="og:title" content={title} />
+        <meta id="og-image" property="og:image" content={seo_image} />
+        <meta id="og-url" property="og:url" content={url} />
+        <meta id="site-name" propert="og:site_name" content={seo_sitename} />
+        
+        <meta id="twitter-card" name="twitter:card" content="summary_large_image" />
+        <meta id="twitter-domain"  name="twitter:domain" value="bam4d.github.io" />
+        <meta id="twitter-title" name="twitter:title" value={title}  />
+        <meta id="twitter-description" name="twitter:description" value={seo_description} />
+        <meta id="twitter-image" name="twitter:image" content={seo_image} />
+        <meta id="twitter-url" name="twitter:url" value={url} />
+        <meta id="twitter-label1" name="twitter:label1" value="Posted" />
+        <meta id="twitter-data1" name="twitter:data1" value={posted_date} />
+      </MetaTags>
       <div className="row">
         <div className="col-md-6" />
         <div className="col-md-6 pull-right">
